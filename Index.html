@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--
+  NAER TAK-SIDE
+  =============
+  SETUP: Ret disse 3 ting før du uploader til GitHub:
+  
+  1. Linje ~170: Ret "naer.carrd.co" i WhatsApp-linket til dit rigtige Carrd-link
+  2. Linje ~175: Ret Facebook share-URL til dit rigtige Carrd-link  
+  3. Linje ~230: Ret LANDING_URL til dit rigtige Carrd-link
+  4. Linje ~207: Ret email-adressen til naerly@protonmail.com (allerede sat)
+  
+  NÅR DU HAR RIGTIGE TAL: Du kan tilføje en progress bar senere
+  når du har nok tilmeldinger til at vise ægte tal.
+-->
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tak! — Nær</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: #FDFAF6;
+            font-family: 'DM Sans', sans-serif;
+            color: #2D2A26;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Confetti animation */
+        .celebration {
+            font-size: 48px;
+            margin-bottom: 24px;
+            animation: bounce 0.6s ease-out;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+            50% { transform: scale(1.1) translateY(-10px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            animation: fadeUp 0.6s ease-out 0.2s both;
+        }
+
+        h1 .green { color: #7A8B6F; }
+
+        .subtitle {
+            font-size: 17px;
+            color: #5C5652;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            animation: fadeUp 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status card */
+        .status-card {
+            background: white;
+            border: 1px solid #E8E3DD;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            animation: fadeUp 0.6s ease-out 0.4s both;
+        }
+
+        .status-card h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        /* Progress bar */
+        .progress-wrap {
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background: #F0EDE7;
+            border-radius: 100px;
+            height: 14px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #7A8B6F, #97A88C);
+            height: 100%;
+            border-radius: 100px;
+            width: 0%;
+            animation: fillBar 1.2s ease-out 0.8s forwards;
+        }
+
+        @keyframes fillBar {
+            to { width: 48%; }
+        }
+
+        .progress-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #7A8B6F;
+            margin-top: 6px;
+        }
+
+        .progress-sub {
+            font-size: 13px;
+            color: #8A8580;
+        }
+
+        /* Share section */
+        .share-card {
+            background: #7A8B6F;
+            border-radius: 16px;
+            padding: 28px 24px;
+            color: white;
+            margin-bottom: 20px;
+            animation: fadeUp 0.6s ease-out 0.5s both;
+        }
+
+        .share-card h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .share-card p {
+            font-size: 14px;
+            opacity: 0.85;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+            transition: transform 0.2s, opacity 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .share-btn.copy {
+            background: white;
+            color: #7A8B6F;
+        }
+
+        .share-btn.whatsapp {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .share-btn.facebook {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* What happens next */
+        .next-card {
+            background: white;
+            border: 1px solid #E8E3DD;
+            border-radius: 16px;
+            padding: 24px 24px;
+            text-align: left;
+            margin-bottom: 20px;
+            animation: fadeUp 0.6s ease-out 0.6s both;
+        }
+
+        .next-card h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .next-step {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 10px 0;
+        }
+
+        .next-step + .next-step {
+            border-top: 1px solid #F0EDE7;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #F0EDE7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .step-text strong {
+            display: block;
+            font-size: 14px;
+            color: #2D2A26;
+            margin-bottom: 2px;
+        }
+
+        .step-text span {
+            font-size: 13px;
+            color: #8A8580;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 13px;
+            color: #8A8580;
+            animation: fadeUp 0.6s ease-out 0.7s both;
+        }
+
+        .footer a {
+            color: #7A8B6F;
+            text-decoration: none;
+        }
+
+        /* Copied tooltip */
+        .copied-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #2D2A26;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copied-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="celebration">🎉</div>
+
+        <h1>Du er på <span class="green">ventelisten!</span></h1>
+
+        <p class="subtitle">
+            Tak fordi du vil være med til at bygge Nær.<br>
+            Det betyder virkelig noget.
+        </p>
+
+        <!-- Status -->
+        <div class="status-card">
+            <h3>Du er med fra starten</h3>
+            <p style="font-size: 15px; color: #5C5652; line-height: 1.6; margin-bottom: 12px;">
+                Når din kommune rammer <strong style="color: #7A8B6F;">25 tilmeldinger</strong> åbner vi op — og du er med som en af de første.
+            </p>
+            <p style="font-size: 14px; color: #8A8580; line-height: 1.5;">
+                Jo flere der tilmelder sig, jo hurtigere sker det. Derfor betyder det enormt meget at du deler med folk i dit område.
+            </p>
+        </div>
+
+        <!-- Share -->
+        <div class="share-card">
+            <h3>Hjælp med at åbne hurtigere</h3>
+            <p>Hver person du deler med bringer din kommune tættere på at åbne. Del med 2-3 venner der også mangler nogen i nærheden.</p>
+            
+            <div class="share-buttons">
+                <button class="share-btn copy" onclick="copyLink()">
+                    📋 Kopiér link
+                </button>
+                <a class="share-btn facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://naer.carrd.co" target="_blank">
+                    📘 Facebook
+                </a>
+            </div>
+        </div>
+
+        <!-- What happens next -->
+        <div class="next-card">
+            <h3>Hvad sker der nu?</h3>
+            
+            <div class="next-step">
+                <div class="step-icon">📧</div>
+                <div class="step-text">
+                    <strong>Vi skriver til dig</strong>
+                    <span>Når din kommune rammer 25 tilmeldinger, får du en email med næste skridt.</span>
+                </div>
+            </div>
+
+            <div class="next-step">
+                <div class="step-icon">👥</div>
+                <div class="step-text">
+                    <strong>Du bliver matchet</strong>
+                    <span>Vi forbinder dig med forældre og voksne i din kommune der ligner dig.</span>
+                </div>
+            </div>
+
+            <div class="next-step">
+                <div class="step-icon">☕</div>
+                <div class="step-text">
+                    <strong>Første meetup</strong>
+                    <span>Vi arrangerer et uforpligtende møde — kaffe, gåtur, eller bare en snak.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Spørgsmål? Skriv til <a href="mailto:naerly@protonmail.com">naerly@protonmail.com</a></p>
+            <p style="margin-top: 4px;">Nær · Lavet med ❤️ i Danmark</p>
+        </div>
+
+    </div>
+
+    <!-- Copied toast -->
+    <div class="copied-toast" id="toast">Link kopieret! 📋</div>
+
+    <script>
+        // VIGTIGT: Udskift denne URL med dit rigtige Carrd-link
+        // (brug din landing page URL, IKKE Google Form - folk skal se siden først)
+        const LANDING_URL = "https://naer.carrd.co";
+
+        function copyLink() {
+            navigator.clipboard.writeText(LANDING_URL).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }).catch(() => {
+                // Fallback
+                prompt("Kopiér dette link:", LANDING_URL);
+            });
+        }
+    </script>
+</body>
+</html>
