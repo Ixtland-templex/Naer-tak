@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nær — App Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f5f3ef; font-family: 'DM Sans', sans-serif; color: #2D2A26; padding: 20px; }
+        
+        .phone { width: 375px; max-width: 100%; height: 740px; background: #FDFAF6; border-radius: 40px; border: 3px solid #E8E3DD; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 4px 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+        .statusbar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+        .notch { width: 120px; height: 28px; background: #2D2A26; border-radius: 20px; position: absolute; left: 50%; transform: translateX(-50%); top: 8px; }
+        
+        .header { padding: 8px 20px 12px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .header-logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: #7A8B6F; }
+        .header-location { font-size: 13px; color: #5C5652; background: #F0EDE7; padding: 4px 12px; border-radius: 20px; }
+        
+        .content { flex: 1; overflow-y: auto; padding: 0 0 80px; -webkit-overflow-scrolling: touch; }
+        .content-inner { padding: 0 16px; }
+        .section-label { font-size: 14px; color: #5C5652; margin-bottom: 12px; }
+        
+        .card { background: white; border-radius: 16px; padding: 16px; border: 1px solid #E8E3DD; margin-bottom: 10px; cursor: pointer; display: flex; gap: 14px; align-items: center; transition: transform 0.15s; }
+        .card:active { transform: scale(0.98); }
+        
+        .avatar { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #E8F0E4, #F0EDE7); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+        .avatar-lg { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #7A8B6F; font-size: 48px; margin: 0 auto 12px; }
+        .avatar-profile { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #7A8B6F, #5C6F52); display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; margin: 0 auto 12px; }
+        
+        .card-info { flex: 1; min-width: 0; }
+        .card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .card-name { font-weight: 700; font-size: 15px; }
+        .card-match { font-size: 12px; font-weight: 700; }
+        .match-high { color: #7A8B6F; }
+        .match-med { color: #C4956A; }
+        .card-sub { font-size: 13px; color: #5C5652; margin-bottom: 4px; }
+        .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { background: #F0EDE7; padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #5C5652; }
+        .tag-green { background: #E8F0E4; color: #7A8B6F; }
+        
+        .tabbar { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #E8E3DD; display: flex; padding: 8px 0 24px; }
+        .tab { flex: 1; background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; font-family: inherit; opacity: 0.35; transition: opacity 0.2s; position: relative; }
+        .tab.active { opacity: 1; }
+        .tab-icon { font-size: 20px; }
+        .tab-label { font-size: 10px; color: #5C5652; }
+        .tab.active .tab-label { font-weight: 700; color: #7A8B6F; }
+        .tab-badge { position: absolute; top: 2px; right: 50%; margin-right: -16px; width: 8px; height: 8px; border-radius: 50%; background: #C4956A; }
+        
+        .btn-primary { width: 100%; padding: 16px; border-radius: 16px; background: #7A8B6F; color: white; border: none; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; box-shadow: 0 4px 16px rgba(122,139,111,0.4); }
+        .btn-small { background: #E8F0E4; color: #7A8B6F; border: none; border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-create { background: #7A8B6F; color: white; border: none; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        
+        .back-btn { background: #F0EDE7; border: none; border-radius: 12px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+        
+        .detail-section { background: white; border-radius: 16px; padding: 16px; border: 1px solid #E8E3DD; margin-bottom: 12px; }
+        .detail-label { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .detail-text { font-size: 14px; color: #5C5652; line-height: 1.6; }
+        
+        .score-box { text-align: center; }
+        .score-num { font-size: 32px; font-weight: 700; }
+        .score-bar { height: 6px; background: #F0EDE7; border-radius: 10px; margin-top: 8px; overflow: hidden; }
+        .score-fill { height: 100%; border-radius: 10px; }
+        
+        .hej-sent { background: #E8F0E4; border-radius: 16px; padding: 14px; text-align: center; color: #7A8B6F; font-weight: 600; font-size: 15px; }
+        
+        .icebreaker { background: #E8F0E4; border-radius: 16px; padding: 16px; border: 1px solid rgba(122,139,111,0.2); margin-bottom: 12px; }
+        .icebreaker-label { font-size: 12px; color: #7A8B6F; font-weight: 700; margin-bottom: 6px; }
+        .icebreaker-text { font-size: 14px; color: #2D2A26; font-style: italic; }
+        .icebreaker-btn { background: none; border: none; color: #7A8B6F; font-size: 12px; cursor: pointer; margin-top: 6px; font-family: inherit; font-weight: 600; }
+        
+        .bottom-cta { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px 28px; background: linear-gradient(transparent, #FDFAF6 20%); }
+        
+        .kommune-hero { background: linear-gradient(135deg, #7A8B6F, #5C6F52); border-radius: 20px; padding: 24px 20px; margin-bottom: 16px; color: white; text-align: center; }
+        .kommune-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+        .kommune-bar { height: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .kommune-fill { height: 100%; background: white; border-radius: 10px; }
+        
+        .kommune-row { background: white; border-radius: 12px; padding: 12px 16px; border: 1px solid #E8E3DD; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+        .kommune-row-info { flex: 1; }
+        .kommune-row-name { font-size: 14px; font-weight: 600; }
+        .kommune-row-bar { height: 4px; background: #F0EDE7; border-radius: 4px; margin-top: 6px; overflow: hidden; }
+        .kommune-row-fill { height: 100%; background: #C4956A; border-radius: 4px; }
+        
+        .event-type { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+        .event-ai { background: #E8F0E4; color: #7A8B6F; }
+        .event-user { background: #F0EDE7; color: #5C5652; }
+        
+        .chat-card { background: white; border-radius: 16px; padding: 14px 16px; border: 1px solid #E8E3DD; margin-bottom: 8px; display: flex; gap: 12px; align-items: center; }
+        .chat-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .chat-avatar-person { background: #F0EDE7; font-size: 24px; }
+        .chat-avatar-group { background: #7A8B6F; font-size: 20px; color: white; }
+        .chat-unread { width: 22px; height: 22px; border-radius: 50%; background: #C4956A; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+        .chat-msg { font-size: 13px; color: #5C5652; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .invite-box { background: #E8F0E4; border-radius: 16px; padding: 16px; margin-top: 8px; text-align: center; border: 1px dashed rgba(122,139,111,0.3); }
+        
+        .menu-item { background: white; border-radius: 12px; padding: 14px 16px; border: 1px solid #E8E3DD; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+        .menu-left { display: flex; align-items: center; gap: 12px; }
+        .menu-badge { background: #C4956A; color: white; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        
+        .verified { display: inline-block; background: #E8F0E4; color: #7A8B6F; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-top: 8px; }
+        .meetup-badge { display: inline-block; background: #E8F0E4; color: #7A8B6F; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+        
+        .splash { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(160deg, #7A8B6F 0%, #5C6F52 100%); }
+        .splash-icon { width: 80px; height: 80px; border-radius: 24px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; animation: pulse 1.5s ease-in-out infinite; }
+        .splash-logo { font-family: 'Fraunces', serif; font-size: 32px; color: white; font-weight: 700; letter-spacing: 1px; }
+        .splash-sub { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+        .splash-bar { margin-top: 40px; width: 32px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.3); overflow: hidden; }
+        .splash-bar-fill { width: 100%; height: 100%; background: white; border-radius: 2px; animation: loading 2s ease-in-out; }
+        
+        .cta-banner { background: #F0EDE7; border-radius: 16px; padding: 20px; margin: 16px; text-align: center; }
+        .cta-banner p { font-size: 14px; color: #5C5652; margin-bottom: 12px; line-height: 1.5; }
+        .cta-link { display: inline-block; background: #7A8B6F; color: white; padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 700; text-decoration: none; font-family: 'DM Sans', sans-serif; }
+        
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .anim { animation: slideUp 0.4s ease-out both; }
+        .d1 { animation-delay: 0.08s; } .d2 { animation-delay: 0.16s; } .d3 { animation-delay: 0.24s; } .d4 { animation-delay: 0.32s; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+    <!-- SPLASH -->
+    <div id="splash-screen" class="splash">
+        <div class="splash-icon"><span style="font-family:'Fraunces',serif;color:white;font-size:36px;font-weight:700">N</span></div>
+        <div class="splash-logo">Nær</div>
+        <div class="splash-sub">Find venner nær dig</div>
+        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+    </div>
+
+    <!-- APP -->
+    <div id="app-screen" class="hidden" style="display:none;flex-direction:column;height:100%;">
+        <div class="statusbar">
+            <span>9:41</span>
+            <div class="notch"></div>
+            <span style="font-size:11px">●●● 🔋</span>
+        </div>
+        <div class="header">
+            <div class="header-logo">Nær</div>
+            <div class="header-location">📍 Holbæk</div>
+        </div>
+        <div class="content" id="content"></div>
+        <div class="tabbar" id="tabbar"></div>
+    </div>
+
+    <!-- PROFILE DETAIL -->
+    <div id="profile-screen" class="hidden" style="display:none;flex-direction:column;height:100%;">
+        <div class="statusbar">
+            <span>9:41</span>
+            <div class="notch"></div>
+            <span style="font-size:11px">●●● 🔋</span>
+        </div>
+        <div style="padding:12px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+            <button class="back-btn" onclick="showApp()">←</button>
+            <span style="font-weight:700;font-size:16px">Profil</span>
+        </div>
+        <div class="content" id="profile-content" style="padding-bottom:100px"></div>
+        <div class="bottom-cta" id="profile-cta"></div>
+    </div>
+</div>
+
+<!-- CTA below phone -->
+<div class="cta-banner" id="cta-banner">
+    <p>Vil du være med fra starten?<br>Tilmeld dig ventelisten — det er gratis.</p>
+    <a href="https://naer.carrd.co" class="cta-link">Kom på ventelisten →</a>
+</div>
+
+<script>
+// ==================
+// DATA
+// ==================
+const PROFILES = [
+    { id:1, name:"Thomas", age:34, situation:"Far til 2", seeks:"Mandlige venner", distance:"2.3 km", bio:"Elsker fodbold, gåture og en god øl. Savner nogen at dele det med.", interests:["Fodbold","Gåture","Brætspil"], emoji:"👨", match:85, meetup:true },
+    { id:2, name:"Sofie", age:29, situation:"Ny mor på barsel", seeks:"Kvindelige venner", distance:"1.1 km", bio:"Babyen sover (endelig). Savner voksensnak og kaffe der ikke er kold.", interests:["Kaffe","Yoga","Netflix"], emoji:"👩", match:72, meetup:true },
+    { id:3, name:"Line & Kasper", age:35, situation:"Nyflyttet familie", seeks:"Familievenner", distance:"3.8 km", bio:"Lige flyttet hertil med 2 børn. Kender ingen endnu — men vi er klar!", interests:["Udflugter","Madlavning","Legeplads"], emoji:"👨‍👩‍👧‍👦", match:91, meetup:true },
+    { id:4, name:"Martin", age:41, situation:"Skilt far", seeks:"Mandlige venner", distance:"4.2 km", bio:"Børn hver anden uge. De andre uger er stille. For stille.", interests:["Løb","Film","Guitar"], emoji:"👨", match:68, meetup:false },
+    { id:5, name:"Anja", age:36, situation:"Tilflytter", seeks:"Kvindelige venner", distance:"0.8 km", bio:"Flyttede pga. arbejde. Overraskende svært at finde veninder.", interests:["Vin","Vandring","Bøger"], emoji:"👩", match:77, meetup:true },
+];
+
+const EVENTS = [
+    { title:"Forældrekaffe", where:"Café Nær, Holbæk", when:"Lørdag kl 10:00", attendees:4, emoji:"☕", type:"bruger" },
+    { title:"Gåtur ved fjorden", where:"Holbæk Fjord", when:"Søndag kl 14:00", attendees:7, emoji:"🚶", type:"bruger" },
+    { title:"Brætspilsaften", where:"Bibliotekets café", when:"Onsdag kl 19:00", attendees:3, emoji:"🎲", type:"bruger" },
+    { title:"Legeplads-meetup", where:"Byparken", when:"Fredag kl 15:00", attendees:5, emoji:"🏞️", type:"ai" },
+];
+
+const MESSAGES = [
+    { name:"Thomas", emoji:"👨", lastMsg:"Skal vi tage ungerne i skoven lørdag?", time:"14:32", unread:2, group:false },
+    { name:"Line & Kasper", emoji:"👨‍👩‍👧‍👦", lastMsg:"Vi er klar! Hvad tid?", time:"12:15", unread:0, group:false },
+    { name:"Fædre i Holbæk", emoji:"👥", lastMsg:"Martin: Nogen der vil se kampen?", time:"I går", unread:5, group:true },
+];
+
+const ICE_BREAKERS = [
+    "Hvad er det bedste ved jeres nabolag?",
+    "Hvad streamer I når ungerne endelig sover?",
+    "Kaffe eller te — og hvorfor er svaret kaffe?",
+    "Hvad gør I helst en fridag?",
+];
+
+let activeTab = "discover";
+let hejSent = {};
+let iceIndex = 0;
+
+// ==================
+// SPLASH → APP
+// ==================
+setTimeout(() => {
+    document.getElementById('splash-screen').style.display = 'none';
+    const app = document.getElementById('app-screen');
+    app.classList.remove('hidden');
+    app.style.display = 'flex';
+    renderTabs();
+    renderContent();
+}, 2000);
+
+// ==================
+// TABS
+// ==================
+function renderTabs() {
+    const tabs = [
+        { id:"discover", label:"Opdag", icon:"🔍" },
+        { id:"events", label:"Events", icon:"📅" },
+        { id:"chat", label:"Chat", icon:"💬" },
+        { id:"kommune", label:"Kommune", icon:"📊" },
+        { id:"profil", label:"Mig", icon:"👤" },
+    ];
+    const bar = document.getElementById('tabbar');
+    bar.innerHTML = tabs.map(t => `
+        <button class="tab ${activeTab===t.id?'active':''}" onclick="switchTab('${t.id}')">
+            <span class="tab-icon">${t.icon}</span>
+            <span class="tab-label">${t.label}</span>
+            ${t.id==='chat'?'<div class="tab-badge"></div>':''}
+        </button>
+    `).join('');
+}
+
+function switchTab(id) {
+    activeTab = id;
+    renderTabs();
+    renderContent();
+}
+
+// ==================
+// CONTENT
+// ==================
+function renderContent() {
+    const el = document.getElementById('content');
+    el.scrollTop = 0;
+    if (activeTab === 'discover') renderDiscover(el);
+    else if (activeTab === 'events') renderEvents(el);
+    else if (activeTab === 'chat') renderChat(el);
+    else if (activeTab === 'kommune') renderKommune(el);
+    else if (activeTab === 'profil') renderProfil(el);
+}
+
+function renderDiscover(el) {
+    el.innerHTML = `<div class="content-inner">
+        <div class="section-label">Folk i nærheden der matcher dig</div>
+        ${PROFILES.map((p,i) => `
+            <div class="card anim d${i}" onclick="showProfile(${p.id})">
+                <div class="avatar">${p.emoji}</div>
+                <div class="card-info">
+                    <div class="card-row">
+                        <span class="card-name">${p.name}</span>
+                        <span class="card-match ${p.match>=80?'match-high':'match-med'}">${p.match}%</span>
+                    </div>
+                    <div class="card-sub">${p.situation} · ${p.distance}</div>
+                    <div class="tags">
+                        ${p.interests.slice(0,2).map(int=>`<span class="tag">${int}</span>`).join('')}
+                        ${p.meetup?'<span class="tag tag-green">Vil mødes</span>':''}
+                    </div>
+                </div>
+            </div>
+        `).join('')}
+    </div>`;
+}
+
+function renderEvents(el) {
+    el.innerHTML = `<div class="content-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="section-label" style="margin:0">Events i dit område</div>
+            <button class="btn-create">+ Opret event</button>
+        </div>
+        ${EVENTS.map((ev,i) => `
+            <div class="detail-section anim d${i}">
+                <div style="display:flex;gap:14px;align-items:flex-start">
+                    <div class="avatar" style="width:48px;height:48px;border-radius:14px;font-size:24px">${ev.emoji}</div>
+                    <div style="flex:1">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <span style="font-weight:700;font-size:15px">${ev.title}</span>
+                            <span class="event-type ${ev.type==='ai'?'event-ai':'event-user'}">${ev.type==='ai'?'AI fundet':'Bruger'}</span>
+                        </div>
+                        <div style="font-size:13px;color:#5C5652;margin-top:2px">📍 ${ev.where}</div>
+                        <div style="font-size:13px;color:#5C5652">🕐 ${ev.when}</div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+                            <span style="font-size:12px;color:#7A8B6F;font-weight:600">👥 ${ev.attendees} deltager</span>
+                            <button class="btn-small">Tilmeld mig</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('')}
+    </div>`;
+}
+
+function renderChat(el) {
+    el.innerHTML = `<div class="content-inner">
+        <div class="section-label">Beskeder</div>
+        ${MESSAGES.map((m,i) => `
+            <div class="chat-card anim d${i}">
+                <div class="chat-avatar ${m.group?'chat-avatar-group':'chat-avatar-person'}">${m.emoji}</div>
+                <div style="flex:1;min-width:0">
+                    <div style="display:flex;justify-content:space-between">
+                        <span style="font-weight:700;font-size:14px">${m.name}</span>
+                        <span style="font-size:11px;color:#5C5652">${m.time}</span>
+                    </div>
+                    <div class="chat-msg">${m.lastMsg}</div>
+                </div>
+                ${m.unread>0?`<div class="chat-unread">${m.unread}</div>`:''}
+            </div>
+        `).join('')}
+        <div class="invite-box">
+            <div style="font-size:20px;margin-bottom:6px">👥</div>
+            <div style="font-size:13px;color:#7A8B6F;font-weight:600;margin-bottom:4px">Invitér til chatten</div>
+            <div style="font-size:12px;color:#5C5652;line-height:1.5">Tryk på en chat og invitér din partner — gør det til en familieting!</div>
+        </div>
+    </div>`;
+}
+
+function renderKommune(el) {
+    const kommuner = [
+        { name:"Roskilde", count:6, pct:24 },
+        { name:"Assens", count:3, pct:12 },
+        { name:"Ishøj", count:1, pct:4 },
+        { name:"Egedal", count:1, pct:4 },
+    ];
+    el.innerHTML = `<div class="content-inner">
+        <div class="kommune-hero">
+            <div style="font-size:13px;opacity:0.8;margin-bottom:4px">Din kommune</div>
+            <div class="kommune-title">Holbæk</div>
+            <div class="kommune-bar"><div class="kommune-fill" style="width:48%"></div></div>
+            <div style="font-size:18px;font-weight:700">12 / 25</div>
+            <div style="font-size:12px;opacity:0.8">Mangler 13 for at åbne!</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px">Alle kommuner</div>
+        ${kommuner.map(k => `
+            <div class="kommune-row">
+                <div class="kommune-row-info">
+                    <div class="kommune-row-name">${k.name}</div>
+                    <div class="kommune-row-bar"><div class="kommune-row-fill" style="width:${k.pct}%"></div></div>
+                </div>
+                <div style="font-size:13px;color:#5C5652;font-weight:600">${k.count}/25</div>
+            </div>
+        `).join('')}
+        <div style="background:#F0EDE7;border-radius:12px;padding:14px;margin-top:12px;text-align:center">
+            <div style="font-size:12px;color:#5C5652;line-height:1.5">Del med venner i din kommune for at åbne hurtigere! 🔓</div>
+        </div>
+    </div>`;
+}
+
+function renderProfil(el) {
+    const items = [
+        { icon:"👤", label:"Rediger profil" },
+        { icon:"🔔", label:"Notifikationer" },
+        { icon:"🔒", label:"Privatliv & sikkerhed" },
+        { icon:"⭐", label:"Nær Guld", badge:"49 kr/mdr" },
+        { icon:"📋", label:"Privatlivspolitik" },
+        { icon:"💌", label:"Feedback & forslag" },
+        { icon:"🚪", label:"Log ud" },
+    ];
+    el.innerHTML = `<div class="content-inner">
+        <div style="text-align:center;margin-bottom:20px">
+            <div class="avatar-profile">J</div>
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700">Julius</div>
+            <div style="font-size:13px;color:#5C5652">Ny forælder · Holbæk</div>
+            <div class="verified">✓ Verificeret</div>
+        </div>
+        ${items.map(it => `
+            <div class="menu-item">
+                <div class="menu-left">
+                    <span style="font-size:18px">${it.icon}</span>
+                    <span style="font-size:14px">${it.label}</span>
+                </div>
+                ${it.badge?`<span class="menu-badge">${it.badge}</span>`:`<span style="color:#E8E3DD">›</span>`}
+            </div>
+        `).join('')}
+    </div>`;
+}
+
+// ==================
+// PROFILE DETAIL
+// ==================
+function showProfile(id) {
+    const p = PROFILES.find(x => x.id === id);
+    if (!p) return;
+    
+    document.getElementById('app-screen').style.display = 'none';
+    const ps = document.getElementById('profile-screen');
+    ps.classList.remove('hidden');
+    ps.style.display = 'flex';
+    
+    const content = document.getElementById('profile-content');
+    content.scrollTop = 0;
+    content.innerHTML = `
+        <div style="padding:0 20px">
+            <div style="text-align:center;margin-bottom:20px">
+                <div class="avatar avatar-lg">${p.emoji}</div>
+                <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:700">${p.name}</div>
+                <div style="font-size:14px;color:#5C5652">${p.situation} · ${p.distance}</div>
+                ${p.meetup?'<div class="meetup-badge">Vil gerne mødes ✓</div>':''}
+            </div>
+            <div class="detail-section score-box">
+                <div style="font-size:12px;color:#5C5652;margin-bottom:4px">Match score</div>
+                <div class="score-num" style="color:${p.match>=80?'#7A8B6F':'#C4956A'}">${p.match}%</div>
+                <div class="score-bar"><div class="score-fill" style="width:${p.match}%;background:${p.match>=80?'#7A8B6F':'#C4956A'}"></div></div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-label">Om ${p.name.split(' ')[0]}</div>
+                <div class="detail-text">${p.bio}</div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-label">Interesser</div>
+                <div class="tags">${p.interests.map(i=>`<span class="tag" style="padding:6px 14px;font-size:13px">${i}</span>`).join('')}</div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-label">Søger</div>
+                <div class="detail-text">${p.seeks}</div>
+            </div>
+            <div id="icebreaker-box"></div>
+        </div>
+    `;
+    
+    const cta = document.getElementById('profile-cta');
+    if (hejSent[p.id]) {
+        cta.innerHTML = `<div class="hej-sent">👋 Hej sendt! · <button class="icebreaker-btn" onclick="showIceBreaker()">Se ice breaker</button></div>`;
+    } else {
+        cta.innerHTML = `<button class="btn-primary" onclick="sendHej(${p.id})">Sig hej 👋</button>`;
+    }
+}
+
+function showApp() {
+    document.getElementById('profile-screen').style.display = 'none';
+    const app = document.getElementById('app-screen');
+    app.classList.remove('hidden');
+    app.style.display = 'flex';
+}
+
+function sendHej(id) {
+    hejSent[id] = true;
+    const cta = document.getElementById('profile-cta');
+    cta.innerHTML = `<div class="hej-sent">👋 Hej sendt! · <button class="icebreaker-btn" onclick="showIceBreaker()">Se ice breaker</button></div>`;
+}
+
+function showIceBreaker() {
+    const box = document.getElementById('icebreaker-box');
+    box.innerHTML = `
+        <div class="icebreaker">
+            <div class="icebreaker-label">💡 Ice breaker</div>
+            <div class="icebreaker-text">"${ICE_BREAKERS[iceIndex]}"</div>
+            <button class="icebreaker-btn" onclick="nextIceBreaker()">Ny ice breaker →</button>
+        </div>
+    `;
+}
+
+function nextIceBreaker() {
+    iceIndex = (iceIndex + 1) % ICE_BREAKERS.length;
+    showIceBreaker();
+}
+</script>
+
+</body>
+</html>
